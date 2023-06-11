@@ -78,7 +78,7 @@ type Storages = TValue<NDataStorage.Reducer>;
 type WithType = Extract<TValue<Storages>, {type: any}>;
 type StoragesWithType = PickByValue<NDataStorage.Reducer, NDataStorage.StorageItem<WithType>>;
 
-export const useDSStorageItemsByItemType = <Storage extends keyof StoragesWithType, Type extends NonNullable<NDataStorage.Reducer['items'][keyof NDataStorage.Reducer['items']]>['type']>
+export const useDSStorageItemsByItemType = <Storage extends keyof StoragesWithType, Type extends NonNullable<TValue<NDataStorage.Reducer[Storage]>>['type']>
     (storageName: Storage, type: Type) => {
         const storage = useDSStorage(storageName);
         const itemsByType = Object.values(storage.storage).filter(el => el?.type === type) as Extract<TValue<typeof storage.storage>, { type: typeof type }>[];

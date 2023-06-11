@@ -27,24 +27,10 @@ const renderItem = (item: Item) => {
 
 export const Svg: FC<SvgProps> = ({
 }) => {
-    
-    const items = useDSStorage('items');
 
     const cameras = useDSStorageItemsByItemType('items', 'Camera');
     const tables = useDSStorageItemsByItemType('items', 'Table');
     const walls = useDSStorageItemsByItemType('items', 'Wall');
-
-    // const cameras = useMemo(() => {
-    //     return toPairs(items.storage).filter(([id, item]) => item?.type === 'Camera').map(([_, item]) => item);
-    // }, [items.storage]);
-
-    // const tables = useMemo(() => {
-    //     return toPairs(items.storage).filter(([id, item]) => item?.type === 'Table').map(([_, item]) => item);
-    // }, [items.storage]);
-
-    // const walls = useMemo(() => {
-    //     return toPairs(items.storage).filter(([id, item]) => item?.type === 'Wall').map(([_, item]) => item);
-    // }, [items.storage]);
 
     return (
         <>

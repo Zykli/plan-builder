@@ -37,9 +37,6 @@ export type ReducerTypeDad = {
     // testObject: ObjectType;
     // testArray: ArrayType;
     items: Item<'Camera'> | Item<'Table'> | Item<'Wall'>;
-    test: {
-        a: string
-    }
 };
 
 /**
@@ -50,6 +47,5 @@ export const dataStorageInitialState: NDataStorage.Reducer = {
     // testObject: {},
     // testString: {},
     // testArray: {},
-    items: {},
-    test: {}
+    items: {}
 };
