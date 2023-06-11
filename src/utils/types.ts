@@ -5,7 +5,7 @@ export type ContextWithSetState<S extends {[key: string]: any}> = S & {
 export type Item = {
     id: string;
     name: string;
-    type: 'Camera' | 'Table';
+    type: 'Camera' | 'Table' | 'Wall';
     x: number;
     y: number;
     rotate: number;

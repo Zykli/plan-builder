@@ -10,20 +10,28 @@ type Items = {
 
 export const initialItems: Items = {
     items: {
-        // ["1"]: {
-        //     id: '1',
-        //     name: 'Camera 1',
-        //     type: 'Camera',
-        //     x: 50,
-        //     y: 50,
-        //     rotate:0
-        // },
+        ["1"]: {
+            id: '1',
+            name: 'Camera 1',
+            type: 'Camera',
+            x: 50,
+            y: 50,
+            rotate:0
+        },
         ["2"]: {
             id: '2',
             name: 'Table 1',
             type: 'Table',
-            x: 0,
-            y: 0,
+            x: 200,
+            y: 200,
+            rotate:0
+        },
+        ["3"]: {
+            id: '3',
+            name: 'Wall 1',
+            type: 'Wall',
+            x: 10,
+            y: 100,
             rotate:0
         }
     }

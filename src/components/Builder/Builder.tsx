@@ -41,11 +41,11 @@ export const Builder: FC<BuilderProps> = () => {
 
     useEffect(() => {
         if(!rootDivRef.current) return ;
-        // Viewer.current?.setValue({
-        //     ...Viewer.current?.getValue(),
-        //     e: rulerSize,
-        //     f: rulerSize
-        // });
+        Viewer.current?.setValue({
+            ...Viewer.current?.getValue(),
+            e: rulerSize,
+            f: rulerSize
+        });
     }, []);
 
     return (
@@ -105,14 +105,14 @@ export const Builder: FC<BuilderProps> = () => {
                                     height={sizes.height}
                                 />
                             }
-                            {/* <RulerX
+                            <RulerX
                                 width={sizes.width}
                                 areaWidth={viewWidth}
                             />
                             <RulerY
                                 height={sizes.height}
                                 areaHeight={viewHeight}
-                            /> */}
+                            />
                         </g>
                     </svg>
                 </ReactSVGPanZoom>

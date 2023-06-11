@@ -11,15 +11,4 @@ export const rulerLinesColor = '#7c7c7c';
 export const rulerLinesHeight = 5;
 export const rulerHalfMeterLinesHeight = 12;
 export const rulerMeterLinesHeight = 17;
-
-
-export const itemsSizes = {
-    camera: {
-        width: 12,
-        height: 19
-    },
-    table: {
-        width: 100,
-        height: 50
-    }
-} as const;
+export const itemsStrokeWidth = 1;

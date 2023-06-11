@@ -17,19 +17,9 @@ const renderCenter = (x: number, y: number, width: number, height: number, color
     return <rect x={x + width / 2 - 2} y={y + height / 2 - 2} width={4} height={4} rx={2} fill={color || "#f00"} />
 };
 
-const renderCenter2 = (x: number, y: number, width: number, height: number, color?: string) => {
-    const item = <rect x={x + width / 2 - 2} y={y + height / 2 - 2} width={4} height={4} rx={2} fill={color || "#f00"} />
-    const root = document.getElementById('centers');
-    if(!root) return null;
-    return createPortal(item, root);
-};
-
-
 export const Item: FC<ItemProps> = ({
     id,
     children,
-    // x,
-    // y,
     width,
     height,
     dragPointsBySmallSize,
@@ -47,15 +37,6 @@ export const Item: FC<ItemProps> = ({
         rotate = 0
     } = item!;
 
-    const [ _, setItems, itemsStateRef ] = useAppContext(ItemsContext);
-
-    const {
-        height: maxPositionY,
-        width: maxPositionX
-    } = useContext(SizeContext);
-
-    const itemCenter = useMemo(() => getItemCenter(Number(x), Number(y), width, height), [x, y, width, height]);
-
     const nx = useMemo(() => {
         const nx = Number(x);
         if(isNaN(nx)) return 0;
@@ -68,50 +49,28 @@ export const Item: FC<ItemProps> = ({
         return ny - height / 2;
     }, [y]);
 
-    const smallestSize = useMemo(() => Math.min(width, height), []);
-
-    const [
-        coords,
-        onMouseDown
-    ] = useDragItem(x, y);
-
-    useEffect(() => {
-        let newX = coords.x;
-        let newY = coords.y;
-        let minX = 0 + width / 2;
-        let maxX = maxPositionX - width / 2;
-        let minY = 0 + height / 2;
-        let maxY = maxPositionY - height / 2;
-        if(dragPointsBySmallSize) {
-            minX = smallestSize / 2;
-            maxX = maxPositionX - smallestSize / 2;
-            minY = smallestSize / 2;
-            maxY = maxPositionY - smallestSize / 2;
-        }
-        newX = newX < minX
-            ? minX
-            : newX > maxX
-            ? maxX
-            : newX;
-        newY = newY < minY
-            ? minY
-            : newY > maxY
-            ? maxY
-            : newY;
-        // if(x !== newX || y !== newY) {
-        onChange({
-            x: newX,
-            y: newY
-        });
-        // }
-    }, [coords]);
-
     const itemRef = useRef<SVGSVGElement>(null);
 
     const [
+        coords,
+        onMouseDown,
+    ] = useDragItem(
+        x,
+        y,
+        itemRef.current,
+        dragPointsBySmallSize
+    );
+
+    useDidUpdateEffect(() => {
+        onChange({
+            x: coords.x,
+            y: coords.y
+        });
+    }, [coords]);
+
+    const [
         angle,
-        onMouseRotateDown,
-        rectCenter
+        onMouseRotateDown
     ] = useRotateItem(rotate, itemRef.current, true);
 
     useDidUpdateEffect(() => {
@@ -127,56 +86,52 @@ export const Item: FC<ItemProps> = ({
     if(!item) return null;
 
     return (
-        <>
+        <g
+            className={'Item'}
+            transform={transform}
+            onMouseDown={(e) => {
+                onMouseDown(e);
+            }}
+        >
+            <svg
+                ref={itemRef}
+                x={nx}
+                y={ny}
+                width={width}
+                height={height}
+                {...props}
+            >
+                {children}
+            </svg>
             <g
-                className={'Item'}
-                transform={transform}
+                className="rotate"
                 onMouseDown={(e) => {
-                    onMouseDown(e);
+                    onMouseRotateDown(e);
                 }}
+                transform={`rotate(45 ${nx + 5 + ((width - 10) / 2)} ${ny + height + 5})`}
             >
                 <svg
-                    ref={itemRef}
-                    x={nx}
-                    y={ny}
-                    width={width}
-                    height={height}
-                    {...props}
+                    x={nx + ((width - 10) / 2)}
+                    y={ny + height}
+                    width={10}
+                    height={10}
                 >
-                    {children}
-                </svg>
-                <g
-                    className="rotate"
-                    onMouseDown={(e) => {
-                        onMouseRotateDown(e);
-                    }}
-                    transform={`rotate(45 ${nx + 5 + ((width - 10) / 2)} ${ny + height + 5})`}
-                >
-                    <svg
-                        x={nx + ((width - 10) / 2)}
-                        y={ny + height}
-                        width={10}
-                        height={10}
-                    >
-                        <polygon
-                            points=".25,9.75 .25,5 5,.25 9.75,.25 9.75,5 5,9.75"
-                            stroke="#000"
-                            strokeWidth=".5"
-                            fill="#fff" 
-                            strokeLinejoin="round"
-                        />
-                    </svg>
-                    <Rotate
-                        className="svg-disable-focus"
-                        x={nx + ((width - 10) / 2)}
-                        y={ny + height}
-                        width={10}
-                        height={10}
+                    <polygon
+                        points=".25,9.75 .25,5 5,.25 9.75,.25 9.75,5 5,9.75"
+                        stroke="#000"
+                        strokeWidth=".5"
+                        fill="#fff" 
+                        strokeLinejoin="round"
                     />
-                </g>
-                {renderCenter(nx, ny, width, height)}
+                </svg>
+                <Rotate
+                    className="svg-disable-focus"
+                    x={nx + ((width - 10) / 2)}
+                    y={ny + height}
+                    width={10}
+                    height={10}
+                />
             </g>
-                {renderCenter2(rectCenter.x, rectCenter.y, width, height, "#00f")}
-        </>
+        </g>
     );
 };
