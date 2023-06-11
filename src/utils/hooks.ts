@@ -196,8 +196,6 @@ export const useRotateItem = (
       angle = Math.round(angle * 100) / 100;
       if(e.ctrlKey) {
         const remainder = Math.round(angle % 10 * 100) / 100;
-        // if(remainder )
-        // console.log('remainder', remainder);
         if(remainder <= 2.5) {
           angle = angle - remainder;
         }
@@ -209,7 +207,6 @@ export const useRotateItem = (
         if(remainder >= 7.5) {
           angle = angle - remainder + 10;
         }
-        console.log('angle', angle);
       }
       setNewDeg(angle);
   }, [itemRef]);

@@ -7,6 +7,7 @@ import { ItemsContext } from "../../contexts/items";
 import { Rotate } from "../icons";
 import { useDSItem } from "../../redux/dataStorage/hooks";
 import { createPortal } from 'react-dom';
+import { useSelectedItem } from "../../redux/itemsState/hooks";
 
 const getItemCenter = (x: number, y: number, width: number, height: number) => ({
     x: x + width / 2,
@@ -30,6 +31,9 @@ export const Item: FC<ItemProps> = ({
         item,
         onChange
     } = useDSItem("items", id);
+
+    const selectedState = useSelectedItem();
+    const disableSelect = useRef(false);
 
     const {
         x = 0,
@@ -62,6 +66,7 @@ export const Item: FC<ItemProps> = ({
     );
 
     useDidUpdateEffect(() => {
+        disableSelect.current = true;
         onChange({
             x: coords.x,
             y: coords.y
@@ -74,6 +79,7 @@ export const Item: FC<ItemProps> = ({
     ] = useRotateItem(rotate, itemRef.current, true);
 
     useDidUpdateEffect(() => {
+        disableSelect.current = true;
         onChange({
             rotate: angle
         });
@@ -82,6 +88,10 @@ export const Item: FC<ItemProps> = ({
     const transform = useMemo(() => {
         return `rotate(${angle} ${nx + width / 2} ${ny + height / 2})`
     }, [nx, ny, width, height, angle]);
+
+    const isSelected = useMemo(() => {
+        return selectedState.selected === id;
+    }, [selectedState.selected, id]);
     
     if(!item) return null;
 
@@ -91,6 +101,13 @@ export const Item: FC<ItemProps> = ({
             transform={transform}
             onMouseDown={(e) => {
                 onMouseDown(e);
+            }}
+            onClick={() => {
+                if(!disableSelect.current) {
+                    selectedState.setSelected(isSelected ? null : id )
+                } else {
+                    disableSelect.current = false;
+                }
             }}
         >
             <svg
@@ -103,35 +120,38 @@ export const Item: FC<ItemProps> = ({
             >
                 {children}
             </svg>
-            <g
-                className="rotate"
-                onMouseDown={(e) => {
-                    onMouseRotateDown(e);
-                }}
-                transform={`rotate(45 ${nx + 5 + ((width - 10) / 2)} ${ny + height + 5})`}
-            >
-                <svg
-                    x={nx + ((width - 10) / 2)}
-                    y={ny + height}
-                    width={10}
-                    height={10}
+            {
+                isSelected &&
+                <g
+                    className="rotate"
+                    onMouseDown={(e) => {
+                        onMouseRotateDown(e);
+                    }}
+                    transform={`rotate(45 ${nx + 5 + ((width - 10) / 2)} ${ny + height + 5})`}
                 >
-                    <polygon
-                        points=".25,9.75 .25,5 5,.25 9.75,.25 9.75,5 5,9.75"
-                        stroke="#000"
-                        strokeWidth=".5"
-                        fill="#fff" 
-                        strokeLinejoin="round"
+                    <svg
+                        x={nx + ((width - 10) / 2)}
+                        y={ny + height}
+                        width={10}
+                        height={10}
+                    >
+                        <polygon
+                            points=".25,9.75 .25,5 5,.25 9.75,.25 9.75,5 5,9.75"
+                            stroke="#000"
+                            strokeWidth=".5"
+                            fill="#fff" 
+                            strokeLinejoin="round"
+                        />
+                    </svg>
+                    <Rotate
+                        className="svg-disable-focus"
+                        x={nx + ((width - 10) / 2)}
+                        y={ny + height}
+                        width={10}
+                        height={10}
                     />
-                </svg>
-                <Rotate
-                    className="svg-disable-focus"
-                    x={nx + ((width - 10) / 2)}
-                    y={ny + height}
-                    width={10}
-                    height={10}
-                />
-            </g>
+                </g>
+            }
         </g>
     );
 };

@@ -4,6 +4,7 @@ import { useAppSelector } from "../hooks";
 import { DSGetItem, DSGetStorage } from "./selectors";
 import { changeItem, setItem, removeItem as removeItemAction } from "./actions";
 import { useCallback, useState } from "react";
+import { NonNullableParams, PickByValue, TValue } from "../../utils/utils.types";
 
 /**
  * return current storage value by storage name
@@ -72,3 +73,14 @@ export const useDSItem = <SN extends keyof NDataStorage.Reducer, ID extends keyo
         removeItem
     };
 };
+
+type Storages = TValue<NDataStorage.Reducer>;
+type WithType = Extract<TValue<Storages>, {type: any}>;
+type StoragesWithType = PickByValue<NDataStorage.Reducer, NDataStorage.StorageItem<WithType>>;
+
+export const useDSStorageItemsByItemType = <Storage extends keyof StoragesWithType, Type extends NonNullable<NDataStorage.Reducer['items'][keyof NDataStorage.Reducer['items']]>['type']>
+    (storageName: Storage, type: Type) => {
+        const storage = useDSStorage(storageName);
+        const itemsByType = Object.values(storage.storage).filter(el => el?.type === type) as Extract<TValue<typeof storage.storage>, { type: typeof type }>[];
+        return itemsByType;
+    };

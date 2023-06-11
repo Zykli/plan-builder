@@ -33,6 +33,14 @@ export const initialItems: Items = {
             x: 10,
             y: 100,
             rotate:0
+        },
+        ["4"]: {
+            id: '4',
+            name: 'Wall 2',
+            type: 'Wall',
+            x: 10,
+            y: 100,
+            rotate:0
         }
     }
 };

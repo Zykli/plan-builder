@@ -8,6 +8,11 @@ export type TValue<T> = T extends (infer I)[]
     ? T[keyof T]
     : T;
 
+export type PickByValue<T, ValueType> = Pick<
+  T,
+  { [Key in keyof T]-?: T[Key] extends ValueType ? Key : never }[keyof T]
+>;
+
 type ObjectToObjectsByKey<T extends {[s: string]: any}> = {[Key in keyof T]: { field: Key, value: T[Key] }};
 
 export type ObjectToUnion<T extends {[s: string]: any}> = T[keyof T];
