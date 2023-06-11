@@ -1,0 +1,7 @@
+.PlanBuilder {
+    border: 1px solid;
+    position: relative;
+    cursor: auto;
+    overflow: hidden;
+    background: #fff;
+}

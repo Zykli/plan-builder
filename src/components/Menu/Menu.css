@@ -1,0 +1,13 @@
+.ReactMultipleDiagramMenu {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    z-index: 1;
+    display: flex;
+    gap: 8px;
+}
+
+.ReactMultipleDiagramMenu .MenuButton {
+    display: flex;
+    padding: 0;
+}

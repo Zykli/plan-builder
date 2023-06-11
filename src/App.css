@@ -1,3 +1,11 @@
+.svg-disable-focus {
+  outline: none;
+}
+
+.rotate {
+  cursor: all-scroll;
+}
+
 .App {
   text-align: center;
 }

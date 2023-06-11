@@ -1,0 +1,9 @@
+.SizerX {
+    cursor: e-resize;
+}
+.SizerY {
+    cursor: n-resize;
+}
+.SizerXY {
+    cursor: nw-resize;
+}
